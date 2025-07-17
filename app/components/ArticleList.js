@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import styles from "./ArticleList.module.css";
+import axios from "axios";
 
 const PAGE_SIZE = 3;
 export default function ArticleList() {
@@ -10,6 +11,9 @@ export default function ArticleList() {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
+		// TODO:
+		// 1. explain fetch
+		// 2. explain third-party library (e.g. "axios") - automatic JSON parsing, better error handling, and interceptors
 		fetch("https://dummyjson.com/posts")
 			.then((res) => res.json())
 			.then((data) => {
