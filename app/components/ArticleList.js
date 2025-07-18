@@ -10,16 +10,18 @@ export default function ArticleList() {
 	const [hiddenIds, setHiddenIds] = useState([]);
 	const [loading, setLoading] = useState(true);
 
+	// Mounting, unmounting, statechange
 	useEffect(() => {
 		// TODO:
 		// 1. explain fetch
-		// 2. explain third-party library (e.g. "axios") - automatic JSON parsing, better error handling, and interceptors
-		fetch("https://dummyjson.com/posts")
-			.then((res) => res.json())
-			.then((data) => {
-				setPosts(data.posts);
+		// 2. explain third-party library (e.g. "axios") - automatic JSON parsing, better error handling
+		axios
+			.get("https://dummyjson.com/posts")
+			.then((res) => {
+				setPosts(res.data.posts);
 				setLoading(false);
-			});
+			})
+			.catch((error) => console.log(error));
 	}, []);
 
 	const handleHide = (id) => {

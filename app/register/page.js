@@ -2,13 +2,7 @@
 "use client";
 import { useState } from "react";
 import styles from "./page.module.css";
-
 import { z } from "zod";
-
-const UserSchema = z.object({
-	email: z.email("Invalid email format"),
-	type: z.string().min(1, "Type is required"),
-});
 
 export default function Register() {
 	const [email, setEmail] = useState("");
@@ -16,9 +10,35 @@ export default function Register() {
 	const [status, setStatus] = useState("");
 	const [errors, setErrors] = useState({});
 
+	// Define the schema
+	const UserSchema = z.object({
+		email: z.email("Invalid email format"),
+		type: z.string().min(1, "Minimum length is 1"),
+	});
+
 	const handleSubmit = async (e) => {
 		e.preventDefault(); // prevent page reload
 		setStatus("Submitting...");
+		setErrors({});
+
+		const formData = { email, type };
+		/**
+		 * formData =  {
+		 * 	 email: email,
+		 *   type: type
+		 * }
+		 */
+
+		const validation = UserSchema.safeParse(formData);
+
+		if (!validation.success) {
+			const flattenedErrors = z.flattenError(validation.error);
+			setErrors({
+				email: flattenedErrors.fieldErrors.email,
+				type: flattenedErrors.fieldErrors.type,
+			});
+			return;
+		}
 
 		try {
 			const response = await fetch(
